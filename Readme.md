@@ -1,7 +1,7 @@
-# Capstone Project
+# Model Training Logging
 
 ## 1. Model Training & Logging
-* Trained with resnet18 and logs it
+* Trained with regnetz_c16 and logs it
 * logs f1 score, precision, recall, confusion-matrix
 
 **Tensorboard dev**
@@ -22,15 +22,35 @@ num_classes: 6
 optimizer_name: ADAM
 ```
 
+For augmentation of Images I use random transformation like degree rotation, contrast increase and so on. It is detailed on following code:
+```python
+import torchvision.transforms as T
+
+transforms1 = T.RandomApply(
+            [
+                T.RandomRotation(degrees=(0, 70)),
+                T.RandomHorizontalFlip(p=0.5),
+                T.ColorJitter(brightness=(0.1, 0.6), contrast=1, saturation=0, hue=0.3),
+                T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
+                T.RandomHorizontalFlip(p=0.3),
+            ], 
+            p=0.3
+        )
+transforms = T.Compose([
+                transforms1,
+                T.Resize((224, 224)),
+                T.ToTensor(),
+                T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+```
+
 For confusion matrix in tensorboard logs [**Image not uploaded to tensorboard dev experiment**]:
 ![](files/confusion_matrix_1.gif)
-
-**Code - [Notebook](notebook/1-model-training.ipynb)**
 
 ### 2 - Optuna Hparam Search
 **Tensorboard dev:   https://tensorboard.dev/experiment/IE1yultOSAKjX0XPJUVwlQ/**
 
-```bash
+```python
 Trail with : 
 
 lr_rate:0.00011006008295331135 model name: resnet18 optimizer name: RMS
@@ -85,7 +105,7 @@ Trail with :
 lr_rate:0.00012310173574776534 model name: regnetz_c16 optimizer name: ADAM
 =========================================
 
-tudy statistics: 
+Study statistics: 
   Number of finished trials:  2
   Number of pruned trials:  0
   Number of complete trials:  2
@@ -99,4 +119,3 @@ Params:
     optimizer: ADAM
 ```
 
-**Code - [Notebook](notebook/1-optuna-hparam-tuning.ipynb)**
