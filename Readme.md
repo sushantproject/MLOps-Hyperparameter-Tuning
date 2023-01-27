@@ -1,6 +1,25 @@
 # Model Training Logging
 
 ## 1. Model Training & Logging
+
+### 1.1 PyTorch lightning auto learning rate finder
+* First `pl` learning rate finder is run to find the best learning rate of each models and optimzers.
+* Second trained the model with new learning rate suggested by learning rate finder.
+
+**Final learning rate dict:**
+```python
+{'regnetz_c16': {'ADAM': 0.0019054607179632484, 'SGD': 0.47863009232263803, 'RMS': 0.0005248074602497723}, 'resnet18': {'ADAM': 0.0003019951720402019, 'SGD': 0.030199517204020192, 'RMS': 0.0002089296130854041}, 'efficientnet_b0': {'ADAM': 0.0009120108393559097, 'SGD': 0.04365158322401657, 'RMS': 0.0005248074602497723}}
+```
+
+For figure and logs see this [notebook](notebook/1-optuna-hparam-tuning.ipynb)
+
+**Tensorboard dev**
+```
+$ tensorboard dev upload --logdir lr_logs --name "Pytorch Lightning lr finder" --description "Trained model based on best lr suggest by lr_finder"
+```
+**Tensorboard Logs for pl learning rate finder: https://tensorboard.dev/experiment/T7FMeGy8S0asGVr9wzg3Lw/**
+
+### 1.2 PyTorch lightning Training with best lr
 * Trained with regnetz_c16 and logs it
 * logs f1 score, precision, recall, confusion-matrix
 
@@ -48,7 +67,7 @@ For confusion matrix in tensorboard logs [**Image not uploaded to tensorboard de
 ![](files/confusion_matrix_1.gif)
 
 ### 2 - Optuna Hparam Search
-**Tensorboard dev:   https://tensorboard.dev/experiment/IE1yultOSAKjX0XPJUVwlQ/**
+**Tensorboard dev:   https://tensorboard.dev/experiment/74spvuyAQpCZnb3nK4MyJQ**
 
 ```python
 Trail with : 
@@ -104,7 +123,7 @@ Trail with :
 
 lr_rate:0.00012310173574776534 model name: regnetz_c16 optimizer name: ADAM
 =========================================
-
+# for more logs see notebook
 Study statistics: 
   Number of finished trials:  2
   Number of pruned trials:  0
@@ -119,3 +138,4 @@ Params:
     optimizer: ADAM
 ```
 
+**For more do visit [notebook](notebook/1-optuna-hparam-tuning.ipynb)**
